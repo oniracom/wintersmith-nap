@@ -6,6 +6,7 @@ module.exports = (env, callback) ->
   roots =
     contents: env.config.contents
     output: env.config.output
+    templates: env.config.templates
 
   # Reading config from wintersmith config object (config.json)
   napCfg = env.config.nap
@@ -14,10 +15,13 @@ module.exports = (env, callback) ->
   for ext of napCfg.assets
     for section of napCfg.assets[ext]
       for index of napCfg.assets[ext][section]
-        napCfg.assets[ext][section][index] = roots.contents + napCfg.assets[ext][section][index]
+        napCfg.assets[ext][section][index] = if preview then napCfg.assets[ext][section][index] else roots.templates + napCfg.assets[ext][section][index]
 
   # Setting various `nap` configs
-  napCfg.appDir    =  path.resolve(env.workDir, roots.contents);
+  if preview
+    napCfg.appDir    =  path.resolve(env.workDir, roots.templates);
+  else
+    napCfg.appDir    =  env.workDir
   napCfg.mode      = if preview then 'development' else 'production'
   napCfg.publicDir = if preview then roots.contents else roots.output
 
@@ -26,7 +30,7 @@ module.exports = (env, callback) ->
   
   if preview # development
     # Refer to https://github.com/etabits/wintersmith-nap/pull/3#issuecomment-31646159
-    assetsRx = new RegExp(path.resolve('/assets/', roots.contents)+'/', 'g')
+    assetsRx = new RegExp(path.resolve('/assets/', roots.templates)+'/', 'g')
     createNapWrapper = (ext) ->
       (section) ->
         nap[ext](section).replace(assetsRx, '/')
