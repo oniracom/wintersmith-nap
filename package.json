@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "nap": "~0.7.15",
-    "coffee-script": ">1.5",
+    "coffee-script": ">1.5"
   },
   "devDependencies": {
     "coffee-script": ">1.5",
