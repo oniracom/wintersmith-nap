@@ -19,11 +19,11 @@ module.exports = (env, callback) ->
 
   # Setting various `nap` configs
   if preview
-    napCfg.appDir    =  path.resolve(env.workDir, roots.templates);
+    napCfg.appDir    =  path.resolve(env.workDir, roots.contents);
   else
     napCfg.appDir    =  env.workDir
   napCfg.mode      = if preview then 'development' else 'production'
-  napCfg.publicDir = if preview then roots.contents else roots.output
+  napCfg.publicDir = if preview then '.' else roots.output
 
   # Instantiate nap!
   nap napCfg
